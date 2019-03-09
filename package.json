@@ -8,9 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines":{
-    "node":"10.15.1",
+    "node":"10.x",
   },
-  "author": "",
+  "author": "Gaurav Dwivedi",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
