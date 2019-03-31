@@ -35,12 +35,12 @@ var UserSchema=new mongoose.Schema({
   }]
 });
 
-UserSchema.methods.toJSON=function(){
+UserSchema.methods.toJSON=function(){                                   // Overriding instance method.
   var user=this;
   return _.pick(user,['_id','email']);
 }
 
-UserSchema.methods.generateAuthToken=function(){
+UserSchema.methods.generateAuthToken=function(){                      //Instanse methd.
   var user=this;
   var access='auth';
   var token=jwt.sign({_id:user._id.toHexString(),access},'SecretSalt').toString();
@@ -48,6 +48,24 @@ UserSchema.methods.generateAuthToken=function(){
   return user.save().then(()=>{
     return token;
   });
+}
+
+UserSchema.statics.findbyToken=function(token){
+  var User=this;
+  var decoded;
+  try {
+    decoded=jwt.verify(token,'SecretSalt');
+  } catch (e) {
+      return new Promise((resolve,reject)=>{                      //We can simply use return Promise.reject()
+        reject();
+      });
+  }
+  return User.findOne({
+    _id:decoded._id,
+    'tokens.token':token,
+    'tokens.access':'auth'
+  });
+
 }
 
 var User=mongoose.model('User',UserSchema);
