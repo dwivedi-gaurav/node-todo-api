@@ -1,3 +1,5 @@
+require('./config/config.js');
+
 const _ = require('lodash');
 var {ObjectID}=require('mongodb');
 var express=require('express');
@@ -13,7 +15,7 @@ var app=express();
 
 app.use(bodyParser.json());
 
-var port=process.env.PORT||3000;
+var port=process.env.PORT;
 
 app.post('/todos',authenticate,(req,res)=>{
   var todo=new Todo({
