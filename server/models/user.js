@@ -44,7 +44,7 @@ UserSchema.methods.toJSON=function(){                                   // Overr
 UserSchema.methods.generateAuthToken=function(){                      //Instanse methd.
   var user=this;
   var access='auth';
-  var token=jwt.sign({_id:user._id.toHexString(),access},'SecretSalt').toString();
+  var token=jwt.sign({_id:user._id.toHexString(),access},process.env.JWT_SECRET).toString();
   user.tokens.push({access,token});
   return user.save().then(()=>{
     return token;
@@ -66,7 +66,7 @@ UserSchema.statics.findbyToken=function(token){
   var User=this;
   var decoded;
   try {
-    decoded=jwt.verify(token,'SecretSalt');
+    decoded=jwt.verify(token,process.env.JWT_SECRET);
   } catch (e) {
       return new Promise((resolve,reject)=>{                      //We can simply use return Promise.reject()
         reject();
